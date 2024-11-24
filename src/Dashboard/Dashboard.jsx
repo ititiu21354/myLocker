@@ -104,7 +104,7 @@ const LockerDashboard = () => {
                     </li>
                     <li className="font-medium text-gray-700 flex items-center">
                         <QuestionCircleOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Help</a>
+                        <a href="/help" className="hover:text-blue-600">Help</a>
                     </li>
                 </ul>
             </aside>
