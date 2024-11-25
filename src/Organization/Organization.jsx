@@ -10,7 +10,7 @@ import "./Organization.css";
 
 const Organization = () => {
   const [activeRole, setActiveRole] = useState("Admin"); 
-  const [isMenuVisible, setIsMenuVisible] = useState(false); 
+  const [isMenuVisible, setIsMenuVisible] = useState(true); 
   const [selectedRows, setSelectedRows] = useState([]); 
   const [editingRow, setEditingRow] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", contact: "", status: "" }); 
@@ -133,12 +133,6 @@ const Organization = () => {
         {/* Header */}
         <header className="organization-header flex items-center justify-between">
           <div className="flex items-center">
-            <button
-              onClick={() => setIsMenuVisible(!isMenuVisible)}
-              className="hamburger-icon text-white text-2xl focus:outline-none mr-4"
-            >
-              &#9776;
-            </button>
             <h1 className="text-white font-bold text-lg">Organization</h1>
           </div>
           <div className="welcome-text">
