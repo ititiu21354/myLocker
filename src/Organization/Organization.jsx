@@ -79,10 +79,10 @@ const Organization = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="organization-container flex h-screen">
       {/* Sidebar */}
       <aside
-        className={`bg-gray-100 p-4 fixed h-full transform ${
+        className={`bg-white-100 p-4 fixed h-full transform ${
           isMenuVisible ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 w-64`}
       >
@@ -156,7 +156,6 @@ const Organization = () => {
             </button>
           ))}
         </div>
-
         {/* Data Table */}
         <div className="table-container mt-6">
           <table className="data-table">
