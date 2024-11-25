@@ -9,47 +9,43 @@ import {
 import "./Organization.css";
 
 const Organization = () => {
-  const [activeRole, setActiveRole] = useState("Admin");
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [editingRow, setEditingRow] = useState(null);
-  const [editForm, setEditForm] = useState({ name: "", contact: "", status: "" });
+  const [activeRole, setActiveRole] = useState("Admin"); // Vai trò hiện tại
+  const [isMenuVisible, setIsMenuVisible] = useState(false); // Trạng thái Sidebar
+  const [selectedRows, setSelectedRows] = useState([]); // Dòng được chọn
+  const [editingRow, setEditingRow] = useState(null); // Dòng đang chỉnh sửa
+  const [editForm, setEditForm] = useState({ name: "", contact: "", status: "" }); // Form chỉnh sửa
 
-  const roles = ["Admin", "User", "Delivery Person"];
-
-  const [adminData, setAdminData] = useState([
-    { id: 1, name: "Admin 1", contact: "admin1@example.com", status: "Active" },
-    { id: 2, name: "Admin 2", contact: "admin2@example.com", status: "Inactive" },
-  ]);
-
-  const [userData, setUserData] = useState([
-    { id: 1, name: "User 1", contact: "user1@example.com", status: "Active" },
-    { id: 2, name: "User 2", contact: "user2@example.com", status: "Pending" },
-  ]);
-
-  const [deliveryData, setDeliveryData] = useState([
-    { id: 1, name: "Delivery 1", contact: "delivery1@example.com", status: "Active" },
-    { id: 2, name: "Delivery 2", contact: "delivery2@example.com", status: "Inactive" },
-  ]);
-
-  const getCurrentData = () => {
-    if (activeRole === "Admin") return [adminData, setAdminData];
-    if (activeRole === "User") return [userData, setUserData];
-    if (activeRole === "Delivery Person") return [deliveryData, setDeliveryData];
+  // Dữ liệu ban đầu theo vai trò
+  const initialData = {
+    Admin: [
+      { id: 1, name: "Admin 1", contact: "admin1@example.com", status: "Active" },
+      { id: 2, name: "Admin 2", contact: "admin2@example.com", status: "Inactive" },
+    ],
+    User: [
+      { id: 1, name: "User 1", contact: "user1@example.com", status: "Pending" },
+      { id: 2, name: "User 2", contact: "user2@example.com", status: "Active" },
+    ],
+    "Delivery Person": [
+      { id: 1, name: "Delivery 1", contact: "delivery1@example.com", status: "Active" },
+      { id: 2, name: "Delivery 2", contact: "delivery2@example.com", status: "Inactive" },
+    ],
   };
 
-  const [data, setData] = getCurrentData();
+  // State quản lý dữ liệu
+  const [data, setData] = useState(initialData);
 
+  // Hàm thêm dòng mới
   const handleAdd = () => {
     const newRow = {
-      id: data.length + 1,
-      name: `Name ${data.length + 1}`,
-      contact: `contact${data.length + 1}@example.com`,
+      id: data[activeRole].length + 1,
+      name: `${activeRole} ${data[activeRole].length + 1}`,
+      contact: `${activeRole.toLowerCase()}${data[activeRole].length + 1}@example.com`,
       status: "Active",
     };
-    setData([...data, newRow]);
+    setData({ ...data, [activeRole]: [...data[activeRole], newRow] });
   };
 
+  // Hàm xử lý khi chọn checkbox
   const handleSelectRow = (id) => {
     if (selectedRows.includes(id)) {
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
@@ -58,21 +54,33 @@ const Organization = () => {
     }
   };
 
+  // Hàm xóa dòng được chọn
   const handleDelete = () => {
-    setData(data.filter((row) => !selectedRows.includes(row.id)));
+    setData({
+      ...data,
+      [activeRole]: data[activeRole].filter((row) => !selectedRows.includes(row.id)),
+    });
     setSelectedRows([]);
   };
 
+  // Hàm bắt đầu chỉnh sửa
   const handleEdit = (row) => {
     setEditingRow(row.id);
     setEditForm({ name: row.name, contact: row.contact, status: row.status });
   };
 
+  // Hàm lưu chỉnh sửa
   const handleSave = () => {
-    setData(data.map((row) => (row.id === editingRow ? { ...row, ...editForm } : row)));
+    setData({
+      ...data,
+      [activeRole]: data[activeRole].map((row) =>
+        row.id === editingRow ? { ...row, ...editForm } : row
+      ),
+    });
     setEditingRow(null);
   };
 
+  // Hàm hủy chỉnh sửa
   const handleCancel = () => {
     setEditingRow(null);
   };
@@ -81,35 +89,47 @@ const Organization = () => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside
-                className={`w-1/5 bg-gray-100 p-4 fixed h-full transform ${isMenuVisible ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300`}
-            >
-                <h5 className="font-bold text-lg mb-6 flex items-center">
-                    <HomeOutlined className="mr-2" />
-                    myLocker Dashboard
-                </h5>
-                <ul className="space-y-3">
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <BookOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Mainpage</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <LockOutlined className="mr-2" />
-                        <a href="/organization" className="hover:text-blue-600">Organization</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <LockOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Locker</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <ProjectOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Project</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <UserOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">User</a>
-                    </li>
-                </ul>
-            </aside>
+        className={`bg-gray-100 p-4 fixed h-full transform ${
+          isMenuVisible ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 w-64`}
+      >
+        <h5 className="font-bold text-lg mb-6 flex items-center">
+          <HomeOutlined className="mr-2" />
+          myLocker Dashboard
+        </h5>
+        <ul className="space-y-3">
+          <li className="font-medium text-gray-700 flex items-center">
+            <BookOutlined className="mr-2" />
+            <a href="/" className="hover:text-blue-600">
+              Mainpage
+            </a>
+          </li>
+          <li className="font-medium text-gray-700 flex items-center">
+            <LockOutlined className="mr-2" />
+            <a href="/organization" className="hover:text-blue-600">
+              Organization
+            </a>
+          </li>
+          <li className="font-medium text-gray-700 flex items-center">
+            <LockOutlined className="mr-2" />
+            <a href="#" className="hover:text-blue-600">
+              Locker
+            </a>
+          </li>
+          <li className="font-medium text-gray-700 flex items-center">
+            <ProjectOutlined className="mr-2" />
+            <a href="#" className="hover:text-blue-600">
+              Project
+            </a>
+          </li>
+          <li className="font-medium text-gray-700 flex items-center">
+            <UserOutlined className="mr-2" />
+            <a href="#" className="hover:text-blue-600">
+              User
+            </a>
+          </li>
+        </ul>
+      </aside>
 
       {/* Main Content */}
       <div
@@ -136,11 +156,14 @@ const Organization = () => {
 
         {/* Roles & Permissions */}
         <div className="roles-container mt-6">
-          {roles.map((role) => (
+          {Object.keys(data).map((role) => (
             <button
               key={role}
               className={`role-button ${activeRole === role ? "active" : ""}`}
-              onClick={() => setActiveRole(role)}
+              onClick={() => {
+                setActiveRole(role);
+                setSelectedRows([]);
+              }}
             >
               {role}
             </button>
@@ -160,7 +183,7 @@ const Organization = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((row) => (
+              {data[activeRole].map((row) => (
                 <tr key={row.id}>
                   <td>
                     {editingRow === row.id ? (
@@ -211,11 +234,20 @@ const Organization = () => {
                   <td>
                     {editingRow === row.id ? (
                       <>
-                        <button onClick={handleSave} className="save-button">Save</button>
-                        <button onClick={handleCancel}className="cancel-button">Cancel</button>
+                        <button onClick={handleSave} className="save-button">
+                          Save
+                        </button>
+                        <button onClick={handleCancel} className="cancel-button">
+                          Cancel
+                        </button>
                       </>
                     ) : (
-                      <button onClick={() => handleEdit(row)}className="edit-button">Edit</button>
+                      <button
+                        onClick={() => handleEdit(row)}
+                        className="edit-button"
+                      >
+                        Edit
+                      </button>
                     )}
                   </td>
                 </tr>
