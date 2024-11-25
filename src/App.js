@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login/Login';
 import Register from './Register/Register';
 import Dashboard from './Dashboard/Dashboard';
-import Help from './Help/help';
+import Organization from './Organization/Organization';
 
 function App() {
     return (
@@ -14,7 +14,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/" element={<Login />} /> {/* Redirect to Login by default */}
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/help" element={<Help />} /> {/* Add Help route */}
+                <Route path="/organization" element={<Organization />} />
             </Routes>
         </Router>
     );

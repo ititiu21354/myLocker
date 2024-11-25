@@ -92,6 +92,10 @@ const LockerDashboard = () => {
                     </li>
                     <li className="font-medium text-gray-700 flex items-center">
                         <LockOutlined className="mr-2" />
+                        <a href="/organization" className="hover:text-blue-600">Organization</a>
+                    </li>
+                    <li className="font-medium text-gray-700 flex items-center">
+                        <LockOutlined className="mr-2" />
                         <a href="#" className="hover:text-blue-600">Locker</a>
                     </li>
                     <li className="font-medium text-gray-700 flex items-center">
@@ -101,10 +105,6 @@ const LockerDashboard = () => {
                     <li className="font-medium text-gray-700 flex items-center">
                         <UserOutlined className="mr-2" />
                         <a href="#" className="hover:text-blue-600">User</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <QuestionCircleOutlined className="mr-2" />
-                        <a href="/help" className="hover:text-blue-600">Help</a>
                     </li>
                 </ul>
             </aside>
