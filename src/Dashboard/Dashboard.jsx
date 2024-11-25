@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { Form, Input, Select, Button, message } from 'antd';
-
+import {Form, Input, Select, Button, message, Dropdown} from 'antd';
+import {
+    HomeOutlined,
+    BookOutlined,
+    LockOutlined,
+    ProjectOutlined,
+    UserOutlined,
+    QuestionCircleOutlined,
+    DownOutlined
+} from '@ant-design/icons';
 import "./Dashboard.css";
+import { Menu } from 'antd';
 
 const LockerDashboard = () => {
     // Generate Sample Data
@@ -41,13 +50,27 @@ const LockerDashboard = () => {
         return sampleData.slice(startIndex, endIndex);
     };
 
-    const handlePrevious = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    const handlePageSelect = (page) => {
+        setCurrentPage(page);
     };
 
-    const handleNext = () => {
-        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    // User info for the header
+    const user = {
+        name: "John Doe",
+        avatar: "https://www.w3schools.com/w3images/avatar2.png", // Replace with actual user avatar URL
     };
+
+    // Dropdown Menu for Profile and Sign Out
+    const menu = (
+        <Menu>
+            <Menu.Item key="0">
+                <a href="#">Profile</a>
+            </Menu.Item>
+            <Menu.Item key="1">
+                <a href="#">Sign Out</a>
+            </Menu.Item>
+        </Menu>
+    );
 
     // Side Menu State
     const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -56,36 +79,33 @@ const LockerDashboard = () => {
         <div className="flex h-screen">
             {/* Sidebar */}
             <aside
-                className={`w-1/5 bg-gray-100 p-4 fixed h-full transform ${isMenuVisible ? "translate-x-0" : "-translate-x-full"
-                    } transition-transform duration-300`}
+                className={`w-1/5 bg-gray-100 p-4 fixed h-full transform ${isMenuVisible ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300`}
             >
-                <h5 className="font-bold text-lg mb-6">myLocker Dashboard</h5>
+                <h5 className="font-bold text-lg mb-6 flex items-center">
+                    <HomeOutlined className="mr-2" />
+                    myLocker Dashboard
+                </h5>
                 <ul className="space-y-3">
-                    <li className="font-medium text-gray-700">
-                        <a href="#" className="hover:text-blue-600">
-                            Work
-                        </a>
+                    <li className="font-medium text-gray-700 flex items-center">
+                        <BookOutlined className="mr-2" />
+                        <a href="#" className="hover:text-blue-600">Mainpage</a>
                     </li>
-                    <li className="font-medium text-gray-700">
-                        <a href="#" className="hover:text-blue-600">
-                            Form Portal
-                        </a>
-                        <ul className="pl-4 space-y-2 text-gray-500">
-                            <li>
-                                <a href="#" className="hover:text-blue-600">Forms</a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-blue-600">Group</a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-blue-600">Provider</a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-blue-600">Quick Action</a>
-                            </li>
-                        </ul>
+                    <li className="font-medium text-gray-700 flex items-center">
+                        <LockOutlined className="mr-2" />
+                        <a href="#" className="hover:text-blue-600">Locker</a>
                     </li>
-                    {/* Other menu items */}
+                    <li className="font-medium text-gray-700 flex items-center">
+                        <ProjectOutlined className="mr-2" />
+                        <a href="#" className="hover:text-blue-600">Project</a>
+                    </li>
+                    <li className="font-medium text-gray-700 flex items-center">
+                        <UserOutlined className="mr-2" />
+                        <a href="#" className="hover:text-blue-600">User</a>
+                    </li>
+                    <li className="font-medium text-gray-700 flex items-center">
+                        <QuestionCircleOutlined className="mr-2" />
+                        <a href="/help" className="hover:text-blue-600">Help</a>
+                    </li>
                 </ul>
             </aside>
 
@@ -105,44 +125,44 @@ const LockerDashboard = () => {
                     </button>
                     <div className="flex justify-between w-full items-center">
                         <h1 className="text-xl font-bold">Locker Management</h1>
-                        <p className="text-sm">
-                            Welcome, <span className="font-bold">Admin!</span>
-                        </p>
+                        <div className="flex items-center space-x-3">
+                            <img
+                                src={user.avatar}
+                                alt="User Avatar"
+                                className="w-8 h-8 rounded-full"
+                            />
+                            <span className="text-sm font-semibold">{user.name}</span>
+                            <Dropdown overlay={menu} trigger={['click']}>
+                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                    <DownOutlined/>
+                                </a>
+                            </Dropdown>
+                        </div>
                     </div>
                 </header>
 
-                {/* Gap between header and content */}
-                <div className="h-6 bg-gray-100"></div>
-
-                {/* Summary Section */}
-                <div className="border-stone-50 px-6 py-2 flex justify-between items-center text-sm">
-                    <Form name="findStatus" layout="vertical">
-                        <span>Status</span>
-                        <Form.Item name="status" rules={[{ required: false }]}>
-                            <Select placeholder="Select Status" className="mb-0">
+                {/* Finding Section */}
+                <div className="flex space-x-4 mb-6 findingSection">
+                    <Form layout="vertical" className="flex-grow">
+                        <Form.Item label="Status" name="status">
+                            <Select placeholder="Select Status" className="w-full">
                                 <Select.Option value="all">All</Select.Option>
                                 <Select.Option value="lock">Lock</Select.Option>
-                                <Select.Option value="unlock">Unlock</Select.Option>
+                                <Select.Option value="unlock">Open</Select.Option>
                             </Select>
                         </Form.Item>
                     </Form>
-                    <Form name="findOwner" layout="vertical">
-                        <span>Owner</span>
-                        <Form.Item name="owner" rules={[{ required: false }]}>
-                            <Input placeholder="Owner" className="mb-0" />
+                    <Form layout="vertical" className="flex-grow">
+                        <Form.Item label="Owner" name="owner">
+                            <Input placeholder="Owner" className="w-full" />
                         </Form.Item>
                     </Form>
-                    <Form name="findLocation" layout="vertical">
-                        <span>Location</span>
-                        <Form.Item name="location" rules={[{ required: false }]}>
-                            <Input placeholder="Location" className="mb-0" />
+                    <Form layout="vertical" className="flex-grow">
+                        <Form.Item label="Location" name="location">
+                            <Input placeholder="Location" className="w-full" />
                         </Form.Item>
                     </Form>
                 </div>
-
-
-                {/* Gap between header and content */}
-                <div className="h-6 bg-gray-100"></div>
 
                 {/* Table Section */}
                 <div className="p-6 overflow-hidden">
@@ -201,26 +221,19 @@ const LockerDashboard = () => {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-between items-center px-6 py-2">
-                    <button
-                        onClick={handlePrevious}
-                        className={`px-3 py-1 rounded ${currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+                <div className="flex justify-center mt-6 space-x-2 mb-10">
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                        <button
+                            key={page}
+                            onClick={() => handlePageSelect(page)}
+                            className={`px-4 py-2 rounded ${currentPage === page
+                                ? "bg-orange-500 text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                             }`}
-                        disabled={currentPage === 1}
-                    >
-                        Previous
-                    </button>
-                    <span>
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={handleNext}
-                        className={`px-3 py-1 rounded ${currentPage === totalPages ? "bg-gray-300" : "bg-blue-500 text-white"
-                            }`}
-                        disabled={currentPage === totalPages}
-                    >
-                        Next
-                    </button>
+                        >
+                            {page}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Footer */}
