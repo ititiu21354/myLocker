@@ -9,13 +9,13 @@ import {
 import "./Organization.css";
 
 const Organization = () => {
-  const [activeRole, setActiveRole] = useState("Admin"); // Vai trò hiện tại
-  const [isMenuVisible, setIsMenuVisible] = useState(false); // Trạng thái Sidebar
-  const [selectedRows, setSelectedRows] = useState([]); // Dòng được chọn
-  const [editingRow, setEditingRow] = useState(null); // Dòng đang chỉnh sửa
-  const [editForm, setEditForm] = useState({ name: "", contact: "", status: "" }); // Form chỉnh sửa
+  const [activeRole, setActiveRole] = useState("Admin"); 
+  const [isMenuVisible, setIsMenuVisible] = useState(false); 
+  const [selectedRows, setSelectedRows] = useState([]); 
+  const [editingRow, setEditingRow] = useState(null);
+  const [editForm, setEditForm] = useState({ name: "", contact: "", status: "" }); 
 
-  // Dữ liệu ban đầu theo vai trò
+
   const initialData = {
     Admin: [
       { id: 1, name: "Admin 1", contact: "admin1@example.com", status: "Active" },
@@ -31,10 +31,8 @@ const Organization = () => {
     ],
   };
 
-  // State quản lý dữ liệu
   const [data, setData] = useState(initialData);
 
-  // Hàm thêm dòng mới
   const handleAdd = () => {
     const newRow = {
       id: data[activeRole].length + 1,
@@ -45,7 +43,6 @@ const Organization = () => {
     setData({ ...data, [activeRole]: [...data[activeRole], newRow] });
   };
 
-  // Hàm xử lý khi chọn checkbox
   const handleSelectRow = (id) => {
     if (selectedRows.includes(id)) {
       setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
@@ -54,7 +51,6 @@ const Organization = () => {
     }
   };
 
-  // Hàm xóa dòng được chọn
   const handleDelete = () => {
     setData({
       ...data,
@@ -63,13 +59,11 @@ const Organization = () => {
     setSelectedRows([]);
   };
 
-  // Hàm bắt đầu chỉnh sửa
   const handleEdit = (row) => {
     setEditingRow(row.id);
     setEditForm({ name: row.name, contact: row.contact, status: row.status });
   };
 
-  // Hàm lưu chỉnh sửa
   const handleSave = () => {
     setData({
       ...data,
@@ -80,7 +74,6 @@ const Organization = () => {
     setEditingRow(null);
   };
 
-  // Hàm hủy chỉnh sửa
   const handleCancel = () => {
     setEditingRow(null);
   };
@@ -258,12 +251,8 @@ const Organization = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons mt-6">
-          <button className="action-button add" onClick={handleAdd}>
-            + Add
-          </button>
-          <button className="action-button delete" onClick={handleDelete}>
-            🗑 Delete
-          </button>
+          <button className="action-button add" onClick={handleAdd}> + Add</button>
+          <button className="action-button delete" onClick={handleDelete}> 🗑 Delete</button>
         </div>
       </div>
     </div>

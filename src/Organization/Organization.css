@@ -74,7 +74,7 @@
 .table-container {
     flex: 1;
     margin-top: 20px;
-    overflow-x: auto; /* Đảm bảo table không bị tràn */
+    overflow-x: auto;
 }
 
 .data-table {
@@ -92,9 +92,9 @@
 
 .data-table td {
     padding: 10px;
-    vertical-align: middle; /* Nội dung căn giữa theo chiều dọc */
-    height: 50px; /* Cố định chiều cao của dòng */
-    border: 1px solid #ddd; /* Thêm viền cho các ô */
+    vertical-align: middle; 
+    height: 50px; 
+    border: 1px solid #ddd; 
 }
 
 .data-table .even-row {
@@ -107,7 +107,7 @@
 
 .data-table input[type="text"] {
     width: 100%;
-    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến kích thước */
+    box-sizing: border-box; 
     font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 4px;
