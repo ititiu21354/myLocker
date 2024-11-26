@@ -1,16 +1,7 @@
 import React, { useState } from "react";
-import {Form, Input, Select, Button, message, Dropdown} from 'antd';
-import {
-    HomeOutlined,
-    BookOutlined,
-    LockOutlined,
-    ProjectOutlined,
-    UserOutlined,
-    QuestionCircleOutlined,
-    DownOutlined
-} from '@ant-design/icons';
+import { Form, Input, Select, Dropdown, Menu } from "antd";
+import { DownOutlined } from "@ant-design/icons"; // Icon for the dropdown
 import "./Dashboard.css";
-import { Menu } from 'antd';
 
 const LockerDashboard = () => {
     // Generate Sample Data
@@ -36,7 +27,13 @@ const LockerDashboard = () => {
         return sampleData;
     };
 
-    const sampleData = generateData();
+    //const sampleData = generateData();
+    const sampleData = [
+        { id: 1, status: "Opened", lastOpen: null, lastLock: null, user: null, location: "Location A", history: [] },
+        { id: 2, status: "Opened", lastOpen: null, lastLock: null, user: null, location: "Location B", history: [] },
+        // Add more rows as needed
+    ];
+    
 
     // Pagination Logic
     const [currentPage, setCurrentPage] = useState(1);
@@ -63,67 +60,142 @@ const LockerDashboard = () => {
     // Dropdown Menu for Profile and Sign Out
     const menu = (
         <Menu>
-            <Menu.Item key="0">
+            <Menu.Item key="profile">
                 <a href="#">Profile</a>
             </Menu.Item>
-            <Menu.Item key="1">
+            <Menu.Item key="signout">
                 <a href="#">Sign Out</a>
             </Menu.Item>
         </Menu>
     );
 
-    // Side Menu State
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    //Create the modal for history
+    const [selectedLocker, setSelectedLocker] = useState(null);
+    const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+
+    // Function to open the modal
+    const handleHistoryClick = (locker) => {
+        setSelectedLocker(locker);
+        setIsHistoryModalOpen(true);
+    };
+
+    // Function to close the modal
+    const closeModal = () => {
+        setSelectedLocker(null);
+        setIsHistoryModalOpen(false);
+    };
+
+
+    // State for button and status interaction
+    const [buttonState, setButtonState] = useState({});
+    const [data, setData] = useState(sampleData);
+
+    const handleButtonClick = (id, action) => {
+        const updatedData = [...data]; // Clone the data state
+        const rowIndex = updatedData.findIndex((row) => row.id === id);
+        const locker = updatedData[rowIndex];
+        const timestamp = new Date().toLocaleString();
+    
+        if (rowIndex === -1) {
+            console.error(`Row with ID ${id} not found.`);
+            return;
+        }
+    
+        // Get the current timestamp
+        const currentTime = new Date().toLocaleString();
+    
+        // Simulate the current user
+        const currentUser = "Current User"; // Replace with actual user info if available
+    
+        // Update the status, timestamps, and user based on the action
+        switch (action) {
+            case "lock":
+                updatedData[rowIndex].status = "Locked";
+                updatedData[rowIndex].lastLock = currentTime;
+                updatedData[rowIndex].user = currentUser;
+                break;
+            case "unlock":
+                updatedData[rowIndex].status = "Opened";
+                updatedData[rowIndex].lastOpen = currentTime;
+                updatedData[rowIndex].user = currentUser;
+                break;
+            case "release":
+                updatedData[rowIndex].status = "Released";
+                updatedData[rowIndex].user = ""; // Clear user on release
+                break;
+            default:
+                console.error(`Invalid action: ${action}`);
+                return;
+        }
+    
+        // Update button state and data
+        setButtonState((prevState) => ({
+            ...prevState,
+            [id]: action,
+        }));
+
+        // Add the action to the history
+        locker.history.push({ action, timestamp });
+
+        //Update state
+        setData(updatedData);
+    };    
+    
+
+    //action button
+    const ActionButton = ({ id, action, currentState, onClick, color, label }) => (
+        <button
+            onClick={() => onClick(id, action)}
+            aria-label={label}
+            className={`${
+                currentState === action ? `font-bold text-${color}-600` : "text-gray-600"
+            } bg-${color}-200 px-2 py-1 rounded hover:bg-${color}-300 hover:text-white`}
+        >
+            {label}
+        </button>
+    );  
+    
+    const [isMenuVisible, setIsMenuVisible] = useState(false)
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen bg-gray">
             {/* Sidebar */}
-            <aside
-                className={`w-1/5 bg-gray-100 p-4 fixed h-full transform ${isMenuVisible ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300`}
-            >
-                <h5 className="font-bold text-lg mb-6 flex items-center">
-                    <HomeOutlined className="mr-2" />
-                    myLocker Dashboard
-                </h5>
+            <aside className="w-1/5 bg-white-100 p-4 min-h-screen">
+                <h5 className="font-bold text-lg mb-6">myVNG Dashboard</h5>
                 <ul className="space-y-3">
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <BookOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Mainpage</a>
+                    <li className="font-medium text-gray-700">
+                        <a href="#" className="hover:text-blue-600">
+                            Work
+                        </a>
                     </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <LockOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Locker</a>
+                    <li className="font-medium text-gray-700">
+                        <a href="#" className="hover:text-blue-600">
+                            Form Portal
+                        </a>
+                        <ul className="pl-4 space-y-2 text-gray-500">
+                            <li>
+                                <a href="#" className="hover:text-blue-600">Forms</a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-blue-600">Group</a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-blue-600">Provider</a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-blue-600">Quick Action</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <ProjectOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Project</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <UserOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">User</a>
-                    </li>
-                    <li className="font-medium text-gray-700 flex items-center">
-                        <QuestionCircleOutlined className="mr-2" />
-                        <a href="#" className="hover:text-blue-600">Help</a>
-                    </li>
+                    {/* Other menu items */}
                 </ul>
             </aside>
 
             {/* Main Content */}
-            <div
-                className={`flex flex-col transition-all duration-300 ${isMenuVisible ? "ml-20" : "ml-0"
-                    } w-full`}
-            >
-                <div className="w-full flex flex-col ml-0"></div>
+            <div className="w-4/5 flex flex-col min-h-screen">
                 {/* Header */}
-                <header className="customHeader text-white px-6 py-4 shadow flex items-center">
-                    <button
-                        onClick={() => setIsMenuVisible(!isMenuVisible)}
-                        className="text-white text-2xl mr-4 focus:outline-none"
-                    >
-                        &#9776; {/* Hamburger icon */}
-                    </button>
-                    <div className="flex justify-between w-full items-center">
+                <header className="bg-white-600 text-black px-6 py-4">
+                    <div className="flex justify-between items-center">
                         <h1 className="text-xl font-bold">Locker Management</h1>
                         <div className="flex items-center space-x-3">
                             <img
@@ -134,7 +206,7 @@ const LockerDashboard = () => {
                             <span className="text-sm font-semibold">{user.name}</span>
                             <Dropdown overlay={menu} trigger={['click']}>
                                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                                    <DownOutlined/>
+                                    <DownOutlined />
                                 </a>
                             </Dropdown>
                         </div>
@@ -161,88 +233,137 @@ const LockerDashboard = () => {
                         <Form.Item label="Location" name="location">
                             <Input placeholder="Location" className="w-full" />
                         </Form.Item>
-                    </Form>
-                </div>
+                        </Form>
+                    </div>
 
                 {/* Table Section */}
-                <div className="p-6 overflow-hidden">
-                    <table className="w-full text-left border-collapse border border-gray-300">
-                        <thead className="bg-gray-100 text-gray-700">
-                            <tr>
-                                <th className="border border-gray-300 px-4 py-2">ID</th>
-                                <th className="border border-gray-300 px-4 py-2">Date Open</th>
-                                <th className="border border-gray-300 px-4 py-2">Date Lock</th>
-                                <th className="border border-gray-300 px-4 py-2">Status</th>
-                                <th className="border border-gray-300 px-4 py-2">Owner</th>
-                                <th className="border border-gray-300 px-4 py-2">Location</th>
-                                <th className="border border-gray-300 px-4 py-2">Setting</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-sm">
-                            {getCurrentPageData().map((row) => (
-                                <tr
-                                    key={row.id}
-                                    className="odd:bg-white even:bg-gray-50 hover:bg-gray-100"
-                                >
-                                    <td className="border border-gray-300 px-4 py-2">{row.id}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{row.open}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{row.lock}</td>
-                                    <td className="border border-gray-300 px-4 py-2">
-                                        <span
-                                            className={`px-2 py-1 rounded text-white ${row.status === "Locked"
-                                                ? "bg-green-500"
-                                                : "bg-blue-500"
-                                                }`}
-                                        >
-                                            {row.status}
-                                        </span>
-                                    </td>
-                                    <td className="border border-gray-300 px-4 py-2">
-                                        {row.owner}
-                                    </td>
-                                    <td className="border border-gray-300 px-4 py-2">
-                                        {row.location}
-                                    </td>
-                                    <td className="border border-gray-300 px-4 py-2 flex justify-around">
-                                        <button className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">
-                                            Lock
-                                        </button>
-                                        <button className="bg-blue-200 text-blue-700 px-2 py-1 rounded hover:bg-blue-300">
-                                            Unlock
-                                        </button>
-                                        <button className="bg-red-200 text-red-700 px-2 py-1 rounded hover:bg-red-300">
-                                            Release
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <div className="table-section bg-gray p-4 shadow rounded-md">
+                <table className="w-full text-center border-collapse border border-gray-300">
+    <thead>
+        <tr className="bg-gray-100">
+            <th className="px-4 py-2 border border-gray-300">ID</th>
+            <th className="px-4 py-2 border border-gray-300">Status</th>
+            <th className="px-4 py-2 border border-gray-300">Last Open</th>
+            <th className="px-4 py-2 border border-gray-300">Last Lock</th>
+            <th className="px-4 py-2 border border-gray-300">User</th>
+            <th className="border border-gray-300 px-4 py-2">Location</th>
+            <th className="px-4 py-2 border border-gray-300">Actions</th>
+            <th className="px-4 py-2 border border-gray-300">History</th>
+        </tr>
+    </thead>
+    <tbody>
+        {data.map((row) => (
+            <tr key={row.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border border-gray-300">{row.id}</td>
+                <td className="px-4 py-2 border border-gray-300">
+                    <span
+                        className={`px-2 py-1 rounded text-white ${
+                            row.status === "Locked"
+                                ? "bg-red-500"
+                                : row.status === "Opened"
+                                ? "bg-green-500"
+                                : "bg-gray-500"
+                        }`}
+                    >
+                        {row.status}
+                    </span>
+                </td>
+                <td className="px-4 py-2 border border-gray-300">{row.lastOpen || "Never Opened"}</td>
+                <td className="px-4 py-2 border border-gray-300">{row.lastLock || "Never Locked"}</td>
+                <td className="px-4 py-2 border border-gray-300">{row.user || "No User"}</td>
+                <td className="border border-gray-300 px-4 py-2">{row.location}</td>
+                <td className="px-4 py-2 border border-gray-300">
+                    <button
+                        onClick={() => handleButtonClick(row.id, "lock")}
+                        className={`${
+                            buttonState[row.id] === "lock" ? "font-bold text-red-600" : "text-gray-600"
+                        } bg-red-200 px-2 py-1 rounded hover:bg-red-300`}
+                    >
+                        Lock
+                    </button>
+                    <button
+                        onClick={() => handleButtonClick(row.id, "unlock")}
+                        className={`${
+                            buttonState[row.id] === "unlock" ? "font-bold text-cyan-600" : "text-gray-600"
+                        } bg-green-200 px-2 py-1 rounded hover:bg-green-300`}
+                    >
+                        Open
+                    </button>
+                    <button
+                        onClick={() => handleButtonClick(row.id, "release")}
+                        className={`${
+                            buttonState[row.id] === "release" ? "font-bold text-blue-600" : "text-gray-600"
+                        } bg-gray-200 px-2 py-1 rounded hover:bg-gray-300`}
+                    >
+                    </button>
+                    <button
+                        onClick={() => handleButtonClick(row.id, "release")}
+                        className={`${
+                            buttonState[row.id] === "release" ? "font-bold text-blue-600" : "text-gray-600"
+                        } bg-gray-200 px-2 py-1 rounded hover:bg-gray-300`}
+                    >
+                        Release
+                    </button>
+                    </td>
+                    <td className="px-4 py-2 border border-gray-300">
+                    <button
+                        onClick={() => handleHistoryClick(row)}
+                        className="text-blue-500 hover:underline"
+                    >
+                        History
+                    </button>
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</table>
+    {isHistoryModalOpen && selectedLocker && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white w-1/3 p-6 rounded-lg shadow-lg relative">
+                <button
+                    onClick={closeModal}
+                    className="absolute top-2 right-2 text-gray-600 hover:text-black"
+                >
+                    &times;
+                </button>
+                <h2 className="text-lg font-bold mb-4">
+                    Locker History (ID: {selectedLocker.id})
+                </h2>
+                {selectedLocker.history && selectedLocker.history.length > 0 ? (
+                    <ul className="list-disc list-inside">
+                        {selectedLocker.history.map((entry, index) => (
+                            <li key={index}>
+                                <span className="font-semibold">{entry.action}</span> at {entry.timestamp}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-gray-500">No history available.</p>
+                )}
+            </div>
+        </div>
+    )}
+</div>
 
-                {/* Pagination */}
-                <div className="flex justify-center mt-6 space-x-2 mb-10">
-                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                        <button
-                            key={page}
-                            onClick={() => handlePageSelect(page)}
-                            className={`px-4 py-2 rounded ${currentPage === page
-                                ? "bg-orange-500 text-white"
-                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
-                        >
-                            {page}
-                        </button>
-                    ))}
+                <div className="table-section bg-gray p-4 shadow rounded-md">
+                    {/* Pagination */}
+                    <div className="flex justify-center mt-6 space-x-2 mb-10">
+                        {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => handlePageSelect(page)}
+                                className={`px-4 py-2 rounded ${currentPage === page
+                                        ? "bg-orange-500 text-white"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                    }`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-
-                {/* Footer */}
-                <footer className="text-xs text-gray-500 text-center py-2">
-                    ver 0.0.1
-                </footer>
             </div>
         </div>
     );
 };
-
 export default LockerDashboard;

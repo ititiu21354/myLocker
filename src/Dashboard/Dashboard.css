@@ -1,10 +1,66 @@
-.customHeader{
-    background-color: #f15a22;
+body {
+  background-color: rgb(233, 233, 233);
 }
-.ml-0 {
-    margin-left: 0;
-  }
-  
-  .ml-20 {
-    margin-left: 20%;
-  }
+
+aside {
+  background-color: white;
+  height: 100%;
+}
+
+header {
+  background-color: white;
+}
+
+.findingSection {
+  padding: 10px;
+  margin: 10px;
+  margin-bottom: 0;
+  background-color: white;
+}
+
+.table-section {
+  padding: 0;
+  margin: 10px;
+}
+
+.flex {
+  display: flex;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.scrollable-content {
+  height: calc(100vh - 60px);
+  /* Adjust height to accommodate header and footer */
+}
+
+.table-wrapper {
+  /* Removed overflow-x: auto */
+}
+
+.split-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.forms-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.pagination button {
+  min-width: 40px;
+  text-align: center;
+  cursor: pointer;
+}
