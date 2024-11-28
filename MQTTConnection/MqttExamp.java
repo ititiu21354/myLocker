@@ -2,7 +2,7 @@ import org.eclipse.paho.client.mqttv3.*;
 
 public class MqttConnection {
     public static void main(String[] args) {
-        String broker = "tcp://broker.captechvn.com:1883"; // WSS protocol for secure WebSocket
+        String broker = "tcp://broker.hivemq.com:1883"; // WSS protocol for secure WebSocket
         String clientId = "JavaClient"; // Unique client ID
 
         ///////////////////////////////////////////
