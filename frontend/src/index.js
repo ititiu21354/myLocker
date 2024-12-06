@@ -14,6 +14,7 @@ const msalConfig = {
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
+
 ReactDOM.render(
     <MsalProvider instance={msalInstance}>
         <App />

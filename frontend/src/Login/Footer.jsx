@@ -1,6 +1,6 @@
 import React from 'react';
 import {InstagramOutlined } from '@ant-design/icons';
-import './Footer.css'; // Import custom CSS for footer styling
+import './Footer.css'; 
 
 const Footer = () => {
     return (
@@ -12,7 +12,7 @@ const Footer = () => {
                     <li><a href="#privacy" className="footer-link">Privacy Policy</a></li>
                     <li><a href="#terms" className="footer-link">Terms of Service</a></li>
                     <li><a href="#contact" className="footer-link">Contact Us</a></li>
-                </ul><InstagramOutlined /> 
+                </ul>
                 <p className="footer-text">© 2023 myLOCKER, Inc. All rights reserved.</p>
             </div>
         </footer>

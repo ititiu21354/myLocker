@@ -1,4 +1,4 @@
-/* Reset body margin and set default font */
+/* Reset body margin and set default font
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -17,4 +17,4 @@ code {
 /* Tailwind CSS directives */
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; 
