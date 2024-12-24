@@ -1,0 +1,108 @@
+/* General layout */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.main-content {
+    margin-left: 250px; /* To ensure space for the sidebar */
+    flex-grow: 1;
+    padding: 20px;
+    margin-top: 80px; /* Space for header */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Table Section */
+.table-section-container {
+    width: calc(100% - 250px); /* Takes remaining space minus the sidebar width */
+    margin-left: 20px;          /* Adds a margin between sidebar and table */
+    padding-top: 60px;          /* Ensure it doesn't overlap with the header */
+}
+
+.table-section {
+    max-height: 600px; /* Increased height */
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 5;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 265px; /* Move the header to the right to avoid covering the sidebar */
+    right: 0;
+    background-color: #fff;
+    padding: 16px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.header-left h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-left p {
+    color: #777;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Pagination */
+.ant-pagination {
+    margin-top: 16px;
+}
+
+/* Table size adjustments for larger content */
+.table-section table {
+    width: 100%; /* Full width of the container */
+    font-size: 16px; /* Larger font for better readability */
+}
+
+.table-section th, .table-section td {
+    padding: 12px 16px; /* Increased padding for more space around text */
+    text-align: left; /* Align text to the left */
+}
+
+.table-section .ant-table-thead th {
+    background-color: #f9fafb;
+    font-weight: bold;
+}
+
+.table-section .ant-table-tbody tr:hover {
+    background-color: #f1f1f1; /* Hover effect for rows */
+}
+
+/* Optional: Style the search bar and buttons */
+.search-input {
+    width: 350px; /* Increase search input width */
+}
+
+.add-button {
+    margin-bottom: 20px; /* Add some margin at the bottom of the Add button */
+}
